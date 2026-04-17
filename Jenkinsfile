@@ -22,7 +22,7 @@ pipeline {
             steps {
                 echo "Installing dependencies..."
                 // npm ci is cleaner for CI/CD
-                sh 'npm ci'
+                sh 'npm install'
             }
         }
 
