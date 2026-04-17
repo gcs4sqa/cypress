@@ -3,7 +3,7 @@ pipeline {
         docker {
             // Using the official Cypress 'factory' image that includes 
             // Chrome, Firefox, and all system dependencies
-            image 'cypress/browsers:node-20.11.0-chrome-121.0.6167.85-ff-122.0-edge-121.0.2277.83-1'
+            image 'cypress/browsers:node-24.15.0-chrome-147.0.7727.101-1-ff-149.0.2-edge-147.0.3912.60-1'
             args '--shm-size=2g' // Prevents browser crashes in Docker
         }
     }
