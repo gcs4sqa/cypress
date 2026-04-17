@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         // This matches the "Name" you gave the NodeJS installation in Jenkins settings
-        nodejs 'Node 20' 
+        nodejs 'Node 25' 
     }
 
     environment {
