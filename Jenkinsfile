@@ -6,9 +6,8 @@ pipeline {
     }
 
     environment {
-        // This forces the heavy Cypress binary to live inside your project folder
-        CYPRESS_RUN_BINARY = "${WORKSPACE}/cypress-binary/Cypress/Cypress"
-        CYPRESS_CACHE_FOLDER = "${WORKSPACE}/cypress-cache"
+        // We define the cache location in the workspace
+        CYPRESS_CACHE_FOLDER = "${WORKSPACE}/.cypress-cache"
     }
 
     stages {
@@ -18,23 +17,30 @@ pipeline {
             }
         }
 
-        stage('Install') {
+        stage('Install Dependencies') {
             steps {
-                echo "Installing dependencies and binary..."
-                // This tells npm where to put the binary during install
-                sh 'export CYPRESS_CACHE_FOLDER=$WORKSPACE/cypress-cache && npm install'
+                // 1. Install the npm package
+                sh 'npm install'
                 
-                // Verify the binary is actually there
+                // 2. Explicitly install the binary into our custom cache folder
+                sh 'npx cypress install'
+                
+                // 3. Verify it's ready to go
                 sh 'npx cypress verify'
             }
         }
 
         stage('Run Cypress') {
             steps {
-                echo "Running tests..."
-                // Ensure the test stage also knows where the cache is
-                sh 'export CYPRESS_CACHE_FOLDER=$WORKSPACE/cypress-cache && xvfb-run npx cypress run'
+                // xvfb-run provides the virtual display for the binary
+                sh 'xvfb-run npx cypress run'
             }
+        }
+    }
+    
+    post {
+        always {
+            archiveArtifacts artifacts: 'cypress/screenshots/**/*.png, cypress/videos/**/*.mp4', allowEmptyArchive: true
         }
     }
 }
